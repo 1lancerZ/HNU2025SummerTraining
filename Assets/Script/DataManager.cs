@@ -10,6 +10,7 @@ public class DataManager : MonoBehaviour
     public ModelController poseController;
     public BoneBinder leftHandModel;
     public BoneBinder rightHandModel;
+    public PoseBinder poseModel;
 
     void Update()
     {
@@ -23,7 +24,7 @@ public class DataManager : MonoBehaviour
         }
         if(poseController != null)
         {
-            poseController.UpdatePosePoints(receiver.poseLandmarks);
+            poseController.UpdateHandPoints(receiver.poseLandmarks);
         }
 
         if (leftHandModel != null)
@@ -33,6 +34,10 @@ public class DataManager : MonoBehaviour
         if (rightHandModel != null)
         {
             rightHandModel.UpdateBones(receiver.rightHandLandmarks);
+        }
+        if (poseModel != null)
+        {
+            poseModel.UpdatePosePoints(receiver.poseLandmarks);
         }
     }
 }

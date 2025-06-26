@@ -41,7 +41,7 @@ public class ModelController : MonoBehaviour
         //DrawConnections();
     }
 
-    public void UpdatePosePoints(Vector3[] landmarks)
+    public void UpdateHandPoints(Vector3[] landmarks)
     {
         if (landmarks == null || landmarks.Length != 33) return;
 

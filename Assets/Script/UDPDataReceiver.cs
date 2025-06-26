@@ -27,7 +27,7 @@ public class UDPDataReceiver : MonoBehaviour
     // 新增：身体骨骼关键点数据（33个点是MediaPipe Pose默认）
     [Header("Pose Data")]
     public Vector3[] poseLandmarks = new Vector3[33];
-    public float[] poseLandmarksVisibility = new float[33]; // 可见度（可选）
+    public float[] poseLandmarksVisibility = new float[33]; // 可见度
 
     // 缩放因子
     [Header("Hand Setting")]
