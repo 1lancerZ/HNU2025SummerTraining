@@ -37,6 +37,7 @@ public class PoseBinder : MonoBehaviour
     }
 
     public Animator anim;//角色动画控制器
+    [Header("Pose")]
     public Transform hip;//臀部
     public Transform spine;//脊椎
     public Transform thorax;//胸部
@@ -79,7 +80,6 @@ public class PoseBinder : MonoBehaviour
     private AvatarTree RArm;
     private Vector3[] posePoints = new Vector3[33];
     public float lerp;
-
     private void Start()
     {
         InitAvatar();
@@ -124,11 +124,11 @@ public class PoseBinder : MonoBehaviour
         RHip = new AvatarTree(rHip, 24, rHip.rotation);
         RKnee = RHip.child = new AvatarTree(rKnee, 26, rHip.rotation, RHip);
         RFoot = RKnee.child = new AvatarTree(rFoot, 30, rFoot.rotation, RKnee);
-        LSld = new AvatarTree(lSld, -6, lSld.rotation);// -6
+        LSld = new AvatarTree(lSld, -6, lSld.rotation);
         LArm = LSld.child = new AvatarTree(lArm, 11, lArm.rotation, LSld);
         LEblow = LArm.child = new AvatarTree(lEblow, 13, lEblow.rotation, LArm);
         LWrist = LEblow.child = new AvatarTree(lWrist, 15, lWrist.rotation, LEblow);
-        RSld = new AvatarTree(rSld, -7, rSld.rotation); // -7
+        RSld = new AvatarTree(rSld, -7, rSld.rotation);
         RArm = RSld.child = new AvatarTree(rArm, 12, rArm.rotation, RSld);
         REblow = RArm.child = new AvatarTree(rEblow, 14, rEblow.rotation, RArm);
         RWrist = REblow.child = new AvatarTree(rWrist, 16, rWrist.rotation, REblow);
@@ -141,11 +141,11 @@ public class PoseBinder : MonoBehaviour
         {
             lerp = 0;
         }
-        //UpdateTree(Hip, lerp);
-        //UpdateTree(LHip, lerp);
-        //UpdateTree(RHip, lerp);
-        UpdateTree(LSld, lerp);
-        UpdateTree(RSld, lerp);
+        //UpdateTree(Hip, lerp);        //脊椎到头部
+        //UpdateTree(LHip, lerp);       //左腿
+        //UpdateTree(RHip, lerp);       //右腿
+        UpdatePoseTree(LSld, lerp);         //左肩
+        UpdatePoseTree(RSld, lerp);         //右肩
 
     }
 
@@ -195,7 +195,7 @@ public class PoseBinder : MonoBehaviour
         }
     }
 
-    private void UpdateTree(AvatarTree tree, float lerp)
+    private void UpdatePoseTree(AvatarTree tree, float lerp)
     {
         if (tree.parent != null)
         {
@@ -203,9 +203,10 @@ public class PoseBinder : MonoBehaviour
         }
         if (tree.child != null)
         {
-            UpdateTree(tree.child, lerp);
+            UpdatePoseTree(tree.child, lerp);
         }
     }//遍历关节
+
     private void UpdateBone(AvatarTree tree, float lerp)
     {
         // 禁用头部旋转
@@ -224,5 +225,7 @@ public class PoseBinder : MonoBehaviour
             tree.parent.transf.rotation = Quaternion.Lerp(rot1, rot * rot1, lerp);
         }
     }//计算骨骼旋转
+
+
 
 }

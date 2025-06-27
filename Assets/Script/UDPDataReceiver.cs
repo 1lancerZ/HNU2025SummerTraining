@@ -21,8 +21,8 @@ public class UDPDataReceiver : MonoBehaviour
     public int handCount = 0;
     public Vector3[] leftHandLandmarks = new Vector3[21];
     public Vector3[] rightHandLandmarks = new Vector3[21];
-    public Vector3[] leftHandLocalLandmarks = new Vector3[21];
-    public Vector3[] rightHandLocalLandmarks = new Vector3[21];
+    //public Vector3[] leftHandLocalLandmarks = new Vector3[21];
+    //public Vector3[] rightHandLocalLandmarks = new Vector3[21];
 
     // 新增：身体骨骼关键点数据（33个点是MediaPipe Pose默认）
     [Header("Pose Data")]
@@ -80,8 +80,8 @@ public class UDPDataReceiver : MonoBehaviour
 
         lock (dataLock)
         {
-            Array.Copy(leftHandLocalLandmarks, leftLocalCopy, 21);
-            Array.Copy(rightHandLocalLandmarks, rightLocalCopy, 21);
+            //Array.Copy(leftHandLocalLandmarks, leftLocalCopy, 21);
+            //Array.Copy(rightHandLocalLandmarks, rightLocalCopy, 21);
             Array.Copy(poseLandmarks, poseCopy, 33);
             Array.Copy(poseLandmarksVisibility, poseVisCopy, 33);
         }
@@ -110,9 +110,9 @@ public class UDPDataReceiver : MonoBehaviour
                                     1 - hand.landmarks[i].y,
                                     (1 - hand.landmarks[i].z) * scale
                                 );
-                                leftHandLocalLandmarks[i] = leftHandLandmarks[i] - leftHandLandmarks[0];
+                                //leftHandLocalLandmarks[i] = leftHandLandmarks[i] - leftHandLandmarks[0];
                             }
-                            leftHandLocalLandmarks[0] = leftHandLandmarks[0];
+                            //leftHandLocalLandmarks[0] = leftHandLandmarks[0];
                         }
                         else if (hand.type == "Right")
                         {
@@ -123,9 +123,9 @@ public class UDPDataReceiver : MonoBehaviour
                                     1 - hand.landmarks[i].y,
                                     (1 - hand.landmarks[i].z) * scale
                                 );
-                                rightHandLocalLandmarks[i] = rightHandLandmarks[i] - rightHandLandmarks[0];
+                                //rightHandLocalLandmarks[i] = rightHandLandmarks[i] - rightHandLandmarks[0];
                             }
-                            rightHandLocalLandmarks[0] = rightHandLandmarks[0];
+                            //rightHandLocalLandmarks[0] = rightHandLandmarks[0];
                         }
                     }
                 }
