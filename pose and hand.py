@@ -4,7 +4,7 @@ import socket
 import json
 
 # === 平滑参数 ===
-SMOOTHING_FACTOR = 0.5  # 越接近1越平稳（但响应越慢）
+SMOOTHING_FACTOR = 0.6  # 越接近1越平稳（但响应越慢）
 
 # 上一帧点缓冲
 prev_hand_points = {}  # key: (type, id) → {"x": float, "y": float, "z": float}
