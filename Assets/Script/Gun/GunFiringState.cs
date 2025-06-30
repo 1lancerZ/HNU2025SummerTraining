@@ -27,13 +27,9 @@ public class GunFiringState : GunState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (gun.currentAmmo > 0)
+        if (triggerCalled)
         {
             gun.StateMachine.ChangeState(gun.idleState);
-        }
-        else
-        {
-            gun.StateMachine.ChangeState(gun.reloadState);
         }
     }
 

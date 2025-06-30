@@ -26,6 +26,12 @@ public class Gun : MonoBehaviour
     public Transform ejectPoint; // 弹出时的位置
     public GameObject magFallingPrefab; // 掉落的弹匣模型预制体
 
+    [Header("准星设置")]
+    public RectTransform crosshairUI;
+    public Camera cam;
+    public float maxRayDistance;
+    public LayerMask raycastMask; // 不包括 Bullet 层
+
     #region States
     public GunStateMachine StateMachine { get; private set; }
 
@@ -54,6 +60,7 @@ public class Gun : MonoBehaviour
     void Update()
     {
         StateMachine.Update();
+        UpdateCrosshair();
 
         // 示例：按 R 键手动换弹（模拟）
         if (Input.GetKeyDown(KeyCode.R))
@@ -106,5 +113,23 @@ public class Gun : MonoBehaviour
     public void OnReloadInsertMag()
     {
         mag.SetActive(true);
+    }
+
+    public void UpdateCrosshair()
+    {
+        Ray ray = new Ray(firePoint.position, firePoint.forward);
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, maxRayDistance, raycastMask))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.origin + ray.direction * maxRayDistance;
+        }
+
+        Vector3 screenPos = cam.WorldToScreenPoint(targetPoint);
+        crosshairUI.position = screenPos;
     }
 }
