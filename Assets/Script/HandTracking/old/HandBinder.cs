@@ -1,3 +1,4 @@
+using landmarktest;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
@@ -34,28 +35,7 @@ public class HandBinder : MonoBehaviour
         }
     }
 
-    //predict actual distance based on measured length
-    //y = m/x + c
-    //measured values: m:-0.0719f, c:0.439f
-    public class DepthCalibrator
-    {
-        //todo convert to MonoBehaviour and add SerializeField private
-        private float m;
-        private float c;
 
-        public DepthCalibrator(float m, float c)
-        {
-            this.m = m;
-            this.c = c;
-        }
-
-        public float GetDepthFromThumbLength(float length)
-        {
-            if (length == 0)
-                return 0;
-            return m / length + c;
-        }
-    }
 
     public Animator anim;//角色动画控制器
     [Header("Setting")]
@@ -94,6 +74,16 @@ public class HandBinder : MonoBehaviour
     private AvatarTree RPinky1, RPinky2, RPinky3, RPinkyTip; // = 17-20
     private Vector3[] rightHandPoints = new Vector3[21];
     public float lerp;
+
+    public bool isGrabbingLeft = false;
+    public bool isGrabbingRight = false;
+
+    private Quaternion[] grabRotations = new Quaternion[]
+    {
+        Quaternion.Euler(0, 0, 50), // 第一节
+        Quaternion.Euler(0, 0, 90), // 第二节
+        Quaternion.Euler(0, 0, 90)  // 第三节
+    };
 
     private void Start()
     {
@@ -159,6 +149,8 @@ public class HandBinder : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+            isGrabbingLeft = !isGrabbingLeft;
         //lerp += Time.deltaTime;
         //if (lerp >= 1.0f)
         //{
@@ -216,9 +208,9 @@ public class HandBinder : MonoBehaviour
         for (int i = 0; i < landmarks.Length; i++)
         {
             float x = (1 - landmarks[i].x) * cam.pixelWidth;
-            float y = landmarks[i].y * cam.pixelHeight;
+            float y = -landmarks[i].y * cam.pixelHeight;
             //float zOffset = landmarks[i].z * zScale; // landmark.z 是相对值
-            float z = -landmarks[i].z; // 摄像机前是负Z
+            float z = landmarks[i].z; // 摄像机前是负Z
 
             result[i] = cam.ScreenToWorldPoint(new Vector3(x, y, z));
         }
@@ -228,9 +220,18 @@ public class HandBinder : MonoBehaviour
 
     private void UpdateTree(AvatarTree tree, float lerp, bool isLeft)
     {
+        bool isGrabbing = isLeft ? isGrabbingLeft : isGrabbingRight;
+
         if (tree.parent != null)
         {
-            UpdateHandBone(tree, lerp, isLeft);
+            if (isGrabbing && tree.idx >= 1 && tree.idx <= 19) // 手指关节
+            {
+                ApplyGrabbingRotation(tree);
+            }
+            else
+            {
+                UpdateHandBone(tree, lerp, isLeft);
+            }
         }
         if (tree.childs != null)
         {
@@ -244,6 +245,7 @@ public class HandBinder : MonoBehaviour
     private void UpdateHandBone(AvatarTree tree, float lerp, bool isLeft)
     {
         if (tree.parent == null) return;
+
         Vector3 dir1 = tree.GetDir();
         Vector3 dir2;
         if (isLeft)
@@ -284,5 +286,16 @@ public class HandBinder : MonoBehaviour
 
 
         return Quaternion.LookRotation(palmNormal, palmForward);
+    }
+
+    private void ApplyGrabbingRotation(AvatarTree joint)
+    {
+        int relativeIndex = (joint.idx - 1) % 4; // 每个手指3节（1,2,3），tip除外
+        int jointIndex = Mathf.Clamp(relativeIndex, 0, 2); // 只对三节有效
+        joint.transf.localRotation = Quaternion.Slerp(
+            joint.transf.localRotation,
+            grabRotations[jointIndex],
+            lerp
+        );
     }
 }

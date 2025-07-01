@@ -1,3 +1,4 @@
+using landmarktest;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,35 +6,46 @@ using UnityEngine;
 public class DataManager : MonoBehaviour
 {
     public UDPDataReceiver receiver;
-    public ModelController leftController;
-    public ModelController rightController;
-    public ModelController poseController;
-    public HandBinder HandModel;
-    public PoseBinder poseModel;
+    //public ModelController leftController;
+    //public ModelController rightController;
+    //public ModelController poseController;
+    //public HandBinder HandModel;
+    //public PoseBinder poseModel;
+    public HandRigController handRigControllerL;
+    public HandRigController handRigControllerR;
 
     void Update()
     {
-        if (leftController != null)
-        {
-            leftController.UpdatePoints(receiver.leftHandLandmarks);
-        }
-        if(rightController != null)
-        {
-            rightController.UpdatePoints(receiver.rightHandLandmarks);
-        }
-        if(poseController != null)
-        {
-            poseController.UpdateHandPoints(receiver.poseLandmarks);
-        }
+        //if (leftController != null)
+        //{
+        //    leftController.UpdatePoints(receiver.leftHandLandmarks);
+        //}
+        //if(rightController != null)
+        //{
+        //    rightController.UpdatePoints(receiver.rightHandLandmarks);
+        //}
+        //if(poseController != null)
+        //{
+        //    poseController.UpdateHandPoints(receiver.poseLandmarks);
+        //}
 
-        if (HandModel != null)
+        //if (HandModel != null)
+        //{
+        //    HandModel.UpdateHandPoints(receiver.leftHandLandmarks, true);
+        //    HandModel.UpdateHandPoints(receiver.rightHandLandmarks, false);
+        //}
+        //if (poseModel != null)
+        //{
+        //    poseModel.UpdatePosePoints(receiver.poseLandmarks);
+        //}
+
+        if(handRigControllerL != null)
         {
-            HandModel.UpdateHandPoints(receiver.leftHandLandmarks, true);
-            HandModel.UpdateHandPoints(receiver.rightHandLandmarks, false);
+            handRigControllerL.UpdateHandPointsFromLandmarks(receiver.leftHandLandmarks, true, receiver.leftHandDepthCM[0]);
         }
-        if (poseModel != null)
+        if (handRigControllerR != null)
         {
-            poseModel.UpdatePosePoints(receiver.poseLandmarks);
+            handRigControllerR.UpdateHandPointsFromLandmarks(receiver.rightHandLandmarks, false, receiver.rightHandDepthCM[0]);
         }
     }
 }

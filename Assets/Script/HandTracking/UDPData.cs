@@ -22,10 +22,11 @@ public class SingleHandData
 [Serializable]
 public class Landmark
 {
-    public float x;
+    public float x;     // 归一化或屏幕坐标
     public float y;
-    public float z;
-    public int id;
+    public float z;     // 相对深度
+    public int id;      // 节点索引
+    public float depthCM; // 可选：如果你在 Python 端估算了 depthCM
 }
 
 [Serializable]
