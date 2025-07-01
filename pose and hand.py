@@ -1,7 +1,11 @@
+import math
+
 import cv2
 import mediapipe as mp
 import socket
 import json
+
+import numpy as np
 
 # === 平滑参数 ===
 SMOOTHING_FACTOR = 0.6  # 越接近1越平稳（但响应越慢）
@@ -9,6 +13,13 @@ SMOOTHING_FACTOR = 0.6  # 越接近1越平稳（但响应越慢）
 # 上一帧点缓冲
 prev_hand_points = {}  # key: (type, id) → {"x": float, "y": float, "z": float}
 prev_pose_points = {}  # key: id → {"x": float, "y": float, "z": float, "v": float}
+
+# === 深度估算系数 ===
+A, B, C = np.polyfit(
+    [300, 245, 200, 170, 145, 130, 112, 103, 93, 87, 80, 75, 70, 67, 62, 59, 57],
+    [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
+    2
+)
 
 def smooth_point(prev, current, alpha=SMOOTHING_FACTOR):
     return alpha * prev + (1 - alpha) * current
@@ -75,6 +86,16 @@ while cap.isOpened():
                 "landmarks": []
             }
 
+            # 估算深度
+            landmark5 = hand_landmarks.landmark[5]
+            landmark17 = hand_landmarks.landmark[17]
+            x1_pix = int(landmark5.x * cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            y1_pix = int(landmark5.y * cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            x2_pix = int(landmark17.x * cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            y2_pix = int(landmark17.y * cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            distance_px = math.sqrt((x2_pix - x1_pix) ** 2 + (y2_pix - y1_pix) ** 2)
+            depthCM = A * distance_px ** 2 + B * distance_px + C
+
             for idx, lm in enumerate(hand_landmarks.landmark):
                 key = (hand_type, idx)
                 if key in prev_hand_points:
@@ -90,7 +111,8 @@ while cap.isOpened():
                     "x": x,
                     "y": y,
                     "z": z,
-                    "id": idx
+                    "id": idx,
+                    "depthCM": depthCM
                 })
 
             data["hands"].append(hand)
