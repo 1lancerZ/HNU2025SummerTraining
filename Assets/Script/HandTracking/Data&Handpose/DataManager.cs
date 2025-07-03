@@ -13,6 +13,8 @@ public class DataManager : MonoBehaviour
     //public PoseBinder poseModel;
     public HandRigController handRigControllerL;
     public HandRigController handRigControllerR;
+    public Hand leftHand;
+    public Hand rightHand;
 
     void Update()
     {
@@ -46,6 +48,15 @@ public class DataManager : MonoBehaviour
         if (handRigControllerR != null)
         {
             handRigControllerR.UpdateHandPointsFromLandmarks(receiver.rightHandLandmarks, false, receiver.rightHandDepthCM[0]);
+        }
+
+        if (leftHand != null)
+        {
+            //leftHand.UpdateHandPose();
+        }
+        if (rightHand != null)
+        {
+            //rightHand.UpdateHandPose();
         }
     }
 }

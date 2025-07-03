@@ -9,6 +9,7 @@ public class Gun : MonoBehaviour
 {
     #region Components
     public Animator anim { get; private set; }
+    public ParticleSystem muzzleFlash { get; private set; } // Ç¹¿Ú»ðÑæÌØÐ§
     #endregion
 
     public Transform firePoint;
@@ -53,6 +54,8 @@ public class Gun : MonoBehaviour
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
+        muzzleFlash = GetComponentInChildren<ParticleSystem>();
+
         currentAmmo = maxAmmo;
         StateMachine.Initialize(idleState);
     }
@@ -82,6 +85,10 @@ public class Gun : MonoBehaviour
 
         lastFireTime = Time.time;
         currentAmmo--;
+        if (muzzleFlash != null) {
+            muzzleFlash.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            muzzleFlash.Play();
+        }
 
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Debug.Log("Bang!");
