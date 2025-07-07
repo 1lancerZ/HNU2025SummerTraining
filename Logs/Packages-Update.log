@@ -1,0 +1,9 @@
+
+=== Thu Jul  3 13:55:43 2025
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were 已更新:
+  com.unity.collab-proxy 从版本 2.5.2 到 2.7.1
+  com.unity.ide.rider 从版本 3.0.31 到 3.0.34

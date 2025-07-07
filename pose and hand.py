@@ -12,7 +12,7 @@ SMOOTHING_FACTOR = 0.6  # 越接近1越平稳（但响应越慢）
 
 # 上一帧点缓冲
 prev_hand_points = {}  # key: (type, id) → {"x": float, "y": float, "z": float}
-prev_pose_points = {}  # key: id → {"x": float, "y": float, "z": float, "v": float}
+#prev_pose_points = {}  # key: id → {"x": float, "y": float, "z": float, "v": float}
 
 # === 深度估算系数 ===
 A, B, C = np.polyfit(
@@ -27,7 +27,7 @@ def smooth_point(prev, current, alpha=SMOOTHING_FACTOR):
 # === 初始化 MediaPipe ===
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
-mp_pose = mp.solutions.pose
+#mp_pose = mp.solutions.pose
 draw_enable = True
 
 hands = mp_hands.Hands(
@@ -36,13 +36,13 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5
 )
 
-pose = mp_pose.Pose(
-    static_image_mode=False,
-    model_complexity=1,
-    enable_segmentation=False,
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5
-)
+# pose = mp_pose.Pose(
+#     static_image_mode=False,
+#     model_complexity=1,
+#     enable_segmentation=False,
+#     min_detection_confidence=0.5,
+#     min_tracking_confidence=0.5
+# )
 
 # === 设置 Socket ===
 host = "127.0.0.1"
@@ -63,7 +63,7 @@ while cap.isOpened():
     image.flags.writeable = False
 
     hand_results = hands.process(image)
-    pose_results = pose.process(image)
+    #pose_results = pose.process(image)
 
     image.flags.writeable = True
 
@@ -71,7 +71,7 @@ while cap.isOpened():
     data = {
         "hands": [],
         "handCount": 0,
-        "poseLandmarks": []
+        #"poseLandmarks": []
     }
 
     # === 处理手部 ===
@@ -127,35 +127,35 @@ while cap.isOpened():
                 )
 
     # === 处理姿态点 ===
-    if pose_results.pose_landmarks:
-        for idx, lm in enumerate(pose_results.pose_landmarks.landmark):
-            if idx in prev_pose_points:
-                prev = prev_pose_points[idx]
-                x = smooth_point(prev["x"], lm.x)
-                y = smooth_point(prev["y"], lm.y)
-                z = smooth_point(prev["z"], lm.z)
-                v = smooth_point(prev["v"], lm.visibility)
-            else:
-                x, y, z, v = lm.x, lm.y, lm.z, lm.visibility
-
-            prev_pose_points[idx] = {"x": x, "y": y, "z": z, "v": v}
-
-            data["poseLandmarks"].append({
-                "x": x,
-                "y": y,
-                "z": z,
-                "visibility": v,
-                "id": idx
-            })
-
-        if draw_enable:
-            mp_drawing.draw_landmarks(
-                image,
-                pose_results.pose_landmarks,
-                mp_pose.POSE_CONNECTIONS,
-                mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2),
-                mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2)
-            )
+    # if pose_results.pose_landmarks:
+    #     for idx, lm in enumerate(pose_results.pose_landmarks.landmark):
+    #         if idx in prev_pose_points:
+    #             prev = prev_pose_points[idx]
+    #             x = smooth_point(prev["x"], lm.x)
+    #             y = smooth_point(prev["y"], lm.y)
+    #             z = smooth_point(prev["z"], lm.z)
+    #             v = smooth_point(prev["v"], lm.visibility)
+    #         else:
+    #             x, y, z, v = lm.x, lm.y, lm.z, lm.visibility
+    #
+    #         prev_pose_points[idx] = {"x": x, "y": y, "z": z, "v": v}
+    #
+    #         data["poseLandmarks"].append({
+    #             "x": x,
+    #             "y": y,
+    #             "z": z,
+    #             "visibility": v,
+    #             "id": idx
+    #         })
+    #
+    #     if draw_enable:
+    #         mp_drawing.draw_landmarks(
+    #             image,
+    #             pose_results.pose_landmarks,
+    #             mp_pose.POSE_CONNECTIONS,
+    #             mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2),
+    #             mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2)
+    #         )
 
     # === 发送数据 ===
     json_data = json.dumps(data)
@@ -172,4 +172,4 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 hands.close()
-pose.close()
+# pose.close()
