@@ -1,11 +1,10 @@
 import math
-
 import cv2
 import mediapipe as mp
 import socket
 import json
-
 import numpy as np
+import joblib
 
 # === 平滑参数 ===
 SMOOTHING_FACTOR = 0.6  # 越接近1越平稳（但响应越慢）
@@ -54,6 +53,23 @@ cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
 
+# 从磁盘中加载模型文件
+gesture_model = joblib.load(r'.\model\gesture_model_media.pkl')
+
+# 获取预测结果
+def getPre(xPos, yPos):
+    # 确保输入的坐标列表不为空，防止后续处理出现错误
+    if len(xPos) != 0 and len(yPos) != 0:
+        # 将 x 坐标和 y 坐标列表转换为一个形状为(2, 21)的 NumPy 数组
+        points = np.asarray([xPos, yPos])
+        # 计算极值并归一化
+        min = points.min(axis=1, keepdims=True)
+        max = points.max(axis=1, keepdims=True)
+        normalized = np.stack((points - min) / (max - min), axis=1).flatten()  # 对数据归一化处理
+        # 使用预训练的 SVM 模型对归一化后的坐标进行预测
+        predicted_gesture = gesture_model.predict([normalized])
+        return predicted_gesture[0]  # 返回预测结果
+
 while cap.isOpened():
     success, image = cap.read()
     if not success:
@@ -61,6 +77,10 @@ while cap.isOpened():
 
     image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
     image.flags.writeable = False
+
+    # 获取图像的长和宽
+    imgHeight = image.shape[0]
+    imgWidth = image.shape[1]
 
     hand_results = hands.process(image)
     #pose_results = pose.process(image)
@@ -82,8 +102,9 @@ while cap.isOpened():
             hand_type = handedness.classification[0].label  # "Left" or "Right"
 
             hand = {
-                "type": hand_type,
-                "landmarks": []
+                "type": hand_type,  # 左手 or 右手
+                "landmarks": [],    # 标记点的坐标
+                "gesture": 0        # 手势
             }
 
             # 估算深度
@@ -95,6 +116,9 @@ while cap.isOpened():
             y2_pix = int(landmark17.y * cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             distance_px = math.sqrt((x2_pix - x1_pix) ** 2 + (y2_pix - y1_pix) ** 2)
             depthCM = A * distance_px ** 2 + B * distance_px + C
+
+            xPos = []
+            yPos = []
 
             for idx, lm in enumerate(hand_landmarks.landmark):
                 key = (hand_type, idx)
@@ -114,6 +138,12 @@ while cap.isOpened():
                     "id": idx,
                     "depthCM": depthCM
                 })
+
+                xPos.append(int(lm.x * imgWidth))
+                yPos.append(int(lm.y * imgHeight))
+
+            pre = getPre(xPos=xPos, yPos=yPos)
+            hand["gesture"] = int(pre)
 
             data["hands"].append(hand)
 
