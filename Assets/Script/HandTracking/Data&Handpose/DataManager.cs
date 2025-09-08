@@ -15,6 +15,7 @@ public class DataManager : MonoBehaviour
     public HandRigController handRigControllerR;
     public Hand leftHand;
     public Hand rightHand;
+    string handpose;
 
     void Update()
     {
@@ -52,7 +53,20 @@ public class DataManager : MonoBehaviour
 
         if (leftHand != null)
         {
-            //leftHand.UpdateHandPose();
+            switch (receiver.leftHandGesture)
+            {
+                case 0:
+                    handpose = "Fire";
+                    break;
+                case 1:
+                    handpose = "Fist";
+                    break;
+                case 2:
+                    handpose = "Palm";
+                    break;
+            }
+            leftHand.UpdateHandPose(handpose);
+
         }
         if (rightHand != null)
         {

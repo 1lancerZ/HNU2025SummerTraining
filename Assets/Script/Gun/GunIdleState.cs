@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class GunIdleState : GunState
 {
@@ -21,7 +22,8 @@ public class GunIdleState : GunState
     public override void HandleInput()
     {
         base.HandleInput();
-        if(Input.GetMouseButtonDown(0) && gun.currentAmmo > 0)
+        if (gun.hand.currentHeldObject != gun) return;
+        if((Input.GetMouseButton(0)||gun.hand.handpose==HandPose.Fire) && gun.currentAmmo > 0)
         {
             gun.StateMachine.ChangeState(gun.firingState);
         }

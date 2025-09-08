@@ -8,21 +8,18 @@ public class HandGrabController : MonoBehaviour
     public KeyCode grabKey = KeyCode.G;    // 模拟抓取键
     public float grabRadius = 0.3f;        // 抓取半径
     public LayerMask grabbableLayer;       // 可抓取物体的层
+    public Hand hand;
 
     private GameObject grabbedObject = null;
     private Rigidbody grabbedRigidbody = null;
 
     void Update()
     {
-        if (Input.GetKeyDown(grabKey))
+        if (Input.GetKeyDown(grabKey) || hand.handpose == HandPose.Fist)
         {
             if (grabbedObject == null)
             {
                 TryGrab();
-            }
-            else
-            {
-                Release();
             }
         }
 

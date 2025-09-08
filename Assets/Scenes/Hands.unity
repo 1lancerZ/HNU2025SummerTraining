@@ -1778,15 +1778,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4213711620244162979, guid: 87e308cb23eea97419b3c2623d8bb3fa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.881
+      value: 3.855
       objectReference: {fileID: 0}
     - target: {fileID: 4213711620244162979, guid: 87e308cb23eea97419b3c2623d8bb3fa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.386
+      value: 1.427
       objectReference: {fileID: 0}
     - target: {fileID: 4213711620244162979, guid: 87e308cb23eea97419b3c2623d8bb3fa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.375
+      value: 0.131
       objectReference: {fileID: 0}
     - target: {fileID: 4213711620244162979, guid: 87e308cb23eea97419b3c2623d8bb3fa, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1881,12 +1881,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 875bf4696279df14a9a170fb95d3ceec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzleFlash: {fileID: 0}
   firePoint: {fileID: 2146250399}
   bulletPrefab: {fileID: 6804990658058999119, guid: 65c9f6563c561ee4e8905d1e6a32548b, type: 3}
   fireRate: 0.2
   maxAmmo: 10
   currentAmmo: 0
+  hand: {fileID: 2095768176}
   mag: {fileID: 1651750166}
   ejectPoint: {fileID: 344868899}
   magFallingPrefab: {fileID: 1651750166}
@@ -2825,6 +2825,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -2972324554277783046, guid: 201dfbca60c6dd040a271a35fa701816, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2095768175}
+    - targetCorrespondingSourceObject: {fileID: -2972324554277783046, guid: 201dfbca60c6dd040a271a35fa701816, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2095768176}
   m_SourcePrefab: {fileID: 100100000, guid: 201dfbca60c6dd040a271a35fa701816, type: 3}
 --- !u!1 &1151196445 stripped
 GameObject:
@@ -3367,6 +3370,8 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
+  leftHandGesture: 0
+  rightHandGesture: 0
   leftHandDepthCM:
   - 0
   - 0
@@ -3495,6 +3500,8 @@ MonoBehaviour:
   receiver: {fileID: 1300571510}
   handRigControllerL: {fileID: 46091890}
   handRigControllerR: {fileID: 123509119}
+  leftHand: {fileID: 2095768176}
+  rightHand: {fileID: 0}
 --- !u!4 &1326411040 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2926668608807141782, guid: 201dfbca60c6dd040a271a35fa701816, type: 3}
@@ -5038,6 +5045,23 @@ MonoBehaviour:
   grabbableLayer:
     serializedVersion: 2
     m_Bits: 1
+  hand: {fileID: 2095768176}
+--- !u!114 &2095768176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332075566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f8e9dca8667fa447a7ef0ea32c4340d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handSide: 0
+  handpose: 1
+  grabAnchor: {fileID: 2095768174}
+  currentHeldObject: {fileID: 0}
 --- !u!1 &2096377006
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,18 +10,20 @@ public enum HandSide
 
 public enum HandPose
 {
-    Open,
-    Closed,
-    Pointing,
-    Pinching,
-    Fist
+    Fire,
+    Fist,
+    Palm
 }
 
 public class Hand : MonoBehaviour
 {
     [Header("Hand Data")]
     public HandSide handSide;
-    private HandPose handpose;
+    public HandPose handpose;
+
+    [Header("Grabbing")]
+    [SerializeField]public Transform grabAnchor;
+    public Gun currentHeldObject;
 
     #region Components
     public HandRigController rigController { get; private set; }

@@ -20,6 +20,8 @@ public class Gun : MonoBehaviour
     public int maxAmmo = 10;
     public int currentAmmo;
 
+    public Hand hand;
+
     private float lastFireTime;
 
     [Header("弹匣设置")]
@@ -138,5 +140,24 @@ public class Gun : MonoBehaviour
 
         Vector3 screenPos = cam.WorldToScreenPoint(targetPoint);
         crosshairUI.position = screenPos;
+    }
+
+
+    public void OnGrab(Hand hand)
+    {
+        Debug.Log($"Gun grabbed by {hand.handSide}");
+
+        if (anim)
+            anim.SetBool("Held", true);
+
+        // 可以禁用开火、重载控制器，或连接状态机
+    }
+
+    public void OnRelease(Hand hand)
+    {
+        Debug.Log($"Gun released by {hand.handSide}");
+
+        if (anim)
+            anim.SetBool("Held", false);
     }
 }

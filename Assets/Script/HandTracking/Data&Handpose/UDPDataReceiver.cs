@@ -21,6 +21,8 @@ public class UDPDataReceiver : MonoBehaviour
     public int handCount = 0;
     public Vector3[] leftHandLandmarks = new Vector3[21];
     public Vector3[] rightHandLandmarks = new Vector3[21];
+    public int leftHandGesture = 2;
+    public int rightHandGesture = 2;
     public float[] leftHandDepthCM = new float[21]; // 深度数据
     public float[] rightHandDepthCM = new float[21];
     //public Vector3[] leftHandLocalLandmarks = new Vector3[21];
@@ -117,6 +119,7 @@ public class UDPDataReceiver : MonoBehaviour
                                 //leftHandLocalLandmarks[i] = leftHandLandmarks[i] - leftHandLandmarks[0];
                             }
                             //leftHandLocalLandmarks[0] = leftHandLandmarks[0];
+                            leftHandGesture = hand.gesture;
                         }
                         else if (hand.type == "Right")
                         {
@@ -132,6 +135,7 @@ public class UDPDataReceiver : MonoBehaviour
                                 //rightHandLocalLandmarks[i] = rightHandLandmarks[i] - rightHandLandmarks[0];
                             }
                             //rightHandLocalLandmarks[0] = rightHandLandmarks[0];
+                            rightHandGesture = hand.gesture;
                         }
                     }
                 }

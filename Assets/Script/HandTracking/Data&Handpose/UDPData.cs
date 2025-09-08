@@ -17,6 +17,7 @@ public class SingleHandData
 {
     public string type;
     public List<Landmark> landmarks;
+    public int gesture;
 }
 
 [Serializable]
