@@ -1,3 +1,6 @@
+using UnityEngine;
+using System.Diagnostics;
+
 public class HandStateMachine
 {
     public HandState CurrentState { get; private set; }
@@ -13,6 +16,7 @@ public class HandStateMachine
         CurrentState.Exit();
         CurrentState = newState;
         CurrentState.Enter();
+        UnityEngine.Debug.Log("change state to " + newState.GetType().Name);
     }
 
     public void Update()

@@ -35,6 +35,9 @@ public class Gun : MonoBehaviour
     public float maxRayDistance;
     public LayerMask raycastMask; // 不包括 Bullet 层
 
+    [Header("Grip Point (设置手握住的空物体)")]
+    public Transform gripPoint;
+
     #region States
     public GunStateMachine StateMachine { get; private set; }
 
@@ -147,8 +150,8 @@ public class Gun : MonoBehaviour
     {
         Debug.Log($"Gun grabbed by {hand.handSide}");
 
-        if (anim)
-            anim.SetBool("Held", true);
+        //if (anim)
+        //    anim.SetBool("Held", true);
 
         // 可以禁用开火、重载控制器，或连接状态机
     }
@@ -157,7 +160,7 @@ public class Gun : MonoBehaviour
     {
         Debug.Log($"Gun released by {hand.handSide}");
 
-        if (anim)
-            anim.SetBool("Held", false);
+        //if (anim)
+        //    anim.SetBool("Held", false);
     }
 }

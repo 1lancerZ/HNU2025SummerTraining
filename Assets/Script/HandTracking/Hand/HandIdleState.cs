@@ -11,6 +11,9 @@ public class HandIdleState : HandState
     public override void Enter()
     {
         base.Enter();
+
+        // 进入闲置状态时释放物体（如果有的话）
+        // Release();
     }
 
     public override void Exit()
@@ -21,7 +24,7 @@ public class HandIdleState : HandState
     public override void HandleInput()
     {
         base.HandleInput();
-        if(hand.handpose == HandPose.Fist)
+        if (hand.handpose == HandPose.Fist)
         {
             stateMachine.ChangeState(hand.grabState);
         }
@@ -52,5 +55,11 @@ public class HandIdleState : HandState
         }
 
         rig.enabled = true;
+
+        // 停止使用抓握姿势，回到MediaPipe控制
+        if (rig != null)
+        {
+            rig.StopGrabPose();
+        }
     }
 }
