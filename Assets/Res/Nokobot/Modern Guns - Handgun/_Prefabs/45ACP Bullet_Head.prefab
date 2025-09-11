@@ -235,6 +235,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 3625037896966406280, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb, type: 3}
+      propertyPath: m_TagString
+      value: Bullet
+      objectReference: {fileID: 0}
     - target: {fileID: 8403992145370945202, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb, type: 3}
       propertyPath: m_Mass
       value: 1
@@ -301,6 +305,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2760909247709576388}
   m_SourcePrefab: {fileID: 100100000, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb, type: 3}
+--- !u!54 &1773974481383211893 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 8403992145370945202, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb, type: 3}
+  m_PrefabInstance: {fileID: 7799836738284049863}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1895300901454820957 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8535412081993147290, guid: 9e0ef2cf9cfc11c46bbe7f28b272f6fb, type: 3}
@@ -325,3 +334,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 50
   lifeTime: 1.5
+  rb: {fileID: 1773974481383211893}

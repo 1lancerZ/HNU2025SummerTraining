@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
 {
     public float speed = 50f;
     public float lifeTime = 5f;
+    public Rigidbody rb;
 
     private void Start()
     {
@@ -15,5 +16,15 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // 如果击中非目标物体，也销毁子弹
+        if (!collision.gameObject.CompareTag("Target"))
+        {
+            Debug.Log($"子弹碰撞: {collision.gameObject.name}");
+            Destroy(gameObject);
+        }
     }
 }
