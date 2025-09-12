@@ -35,7 +35,7 @@ public class UDPDataReceiver : MonoBehaviour
 
     // 缩放因子
     [Header("Hand Setting")]
-    public float scale = 2.0f;
+    public float scale = 1.3f;
 
     // 线程锁
     private readonly object dataLock = new object();
